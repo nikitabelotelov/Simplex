@@ -17,8 +17,12 @@ namespace Simplex
     /// <summary>
     /// Логика взаимодействия для taskCreationWindow.xaml
     /// </summary>
+    /// 
     public partial class TaskCreationWindow : Window
     {
+        private int varNum;
+        private int condNum;
+
         public TaskCreationWindow()
         {
             InitializeComponent();
@@ -40,12 +44,12 @@ namespace Simplex
                 return true;
             if (condNumTB.Text == "" || varNumTB.Text == "")
                 return false;
-            int varNum, condNum;
-            if (!int.TryParse(varNumTB.Text, out varNum))
+            int vars, conds;
+            if (!int.TryParse(varNumTB.Text, out vars))
                 return false;
-            else if (!int.TryParse(condNumTB.Text, out condNum))
+            else if (!int.TryParse(condNumTB.Text, out conds))
                 return false;
-            else if (varNum < 1 || varNum > 16 || condNum < 1 || condNum > 16)
+            else if (vars < 1 || vars > 16 || conds < 1 || conds > 16)
                 return false;
             else
                 return true;
@@ -59,6 +63,11 @@ namespace Simplex
             {
                 ;
             }
+        }
+
+        private void SetButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
