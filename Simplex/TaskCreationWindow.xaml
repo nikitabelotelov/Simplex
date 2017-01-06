@@ -5,15 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Simplex"
         mc:Ignorable="d"
-        Title="taskCreationWindow" Height="422" Width="504">
+        Title="taskCreationWindow" Height="628.985" Width="558.372">
     <Grid>
-        <TextBox x:Name="varNumTB" HorizontalAlignment="Left" Height="20" Margin="165,14,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70" TextChanged="matrixInfoChanged" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="varNumTB" HorizontalAlignment="Left" Height="20" Margin="165,14,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70" />
         <Label x:Name="label" Content="Количество переменных:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="155"/>
-        <TextBox x:Name="condNumTB" HorizontalAlignment="Left" Height="20" Margin="165,47,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70" TextChanged="matrixInfoChanged"/>
+        <TextBox x:Name="condNumTB" HorizontalAlignment="Left" Height="20" Margin="165,47,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70"/>
         <Label x:Name="label_Copy" Content="Количество условий:" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Height="28" Width="155"/>
-        <TextBox x:Name="systemInfo" HorizontalAlignment="Left" Height="53" Margin="345,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="130" IsReadOnly="True"/>
-        <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Left" Margin="255,46,0,0" VerticalAlignment="Top" Width="75" Click="SetButton_Click"/>
-        <Button x:Name="ResetButton" Content="Reset" HorizontalAlignment="Left" Margin="255,14,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox x:Name="systemInfo" HorizontalAlignment="Left" Height="53" Margin="352,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="130" IsReadOnly="True"/>
+        <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Left" Margin="255,46,0,0" VerticalAlignment="Top" Width="75" Click="SetButton_Click" Height="20"/>
+        <Button x:Name="ResetButton" Content="Reset" HorizontalAlignment="Left" Margin="255,14,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
+        <Grid x:Name="MatrixField" HorizontalAlignment="Left" Height="512" Margin="10,76,0,0" VerticalAlignment="Top" Width="519" />
 
     </Grid>
 </Window>

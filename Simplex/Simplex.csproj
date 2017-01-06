@@ -55,6 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FractionClass.cs" />
+    <Compile Include="MatrixTask.cs" />
     <Compile Include="TaskCreationWindow.xaml.cs">
       <DependentUpon>TaskCreationWindow.xaml</DependentUpon>
     </Compile>
