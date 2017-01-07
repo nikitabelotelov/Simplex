@@ -15,10 +15,12 @@
         <Label x:Name="label" Content="Количество переменных:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="155"/>
         <TextBox x:Name="condNumTB" HorizontalAlignment="Left" Height="20" Margin="165,47,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70"/>
         <Label x:Name="label_Copy" Content="Количество условий:" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Height="28" Width="155"/>
-        <TextBox x:Name="systemInfo" HorizontalAlignment="Left" Height="53" Margin="352,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="130" IsReadOnly="True"/>
         <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Left" Margin="255,46,0,0" VerticalAlignment="Top" Width="75" Click="SetButton_Click" Height="20"/>
-        <Button x:Name="ResetButton" Content="Reset" HorizontalAlignment="Left" Margin="255,14,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
-        <Grid x:Name="MatrixField" HorizontalAlignment="Left" Height="512" Margin="10,76,0,0" VerticalAlignment="Top" Width="519" />
-
+        <Button x:Name="ResetButton" Content="Reset to" HorizontalAlignment="Left" Margin="255,14,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
+        <Grid x:Name="VarGrid" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
+        <Grid x:Name="FunctionGrid" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top"/>
+        <Grid x:Name="MatrixField" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top" />
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="20" Margin="355,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" RenderTransformOrigin="1,0.478"/>
+        <Button x:Name="SaveButton" Content="Save task" HorizontalAlignment="Left" Margin="355,46,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
     </Grid>
 </Window>

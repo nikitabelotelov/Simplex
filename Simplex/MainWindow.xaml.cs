@@ -20,6 +20,7 @@ namespace Simplex
     /// </summary>
     public partial class MainWindow : Window
     {
+        static public MatrixTask CurMatrixTask;
         public MainWindow()
         {
             InitializeComponent();
