@@ -12,7 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Mehroz;
-
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Simplex
 {
@@ -78,7 +79,7 @@ namespace Simplex
                 MatrixField.RowDefinitions.Add(new RowDefinition());
                 MatrixField.RowDefinitions[i].Height = new GridLength(CellHeight);
             }
-            for (int i = 0; i < VarNum; i++)
+            for (int i = 0; i < VarNum + 1; i++)
             {
                 MatrixField.ColumnDefinitions.Add(new ColumnDefinition());
                 MatrixField.ColumnDefinitions[i].Width = new GridLength(CellWidth);
@@ -101,8 +102,6 @@ namespace Simplex
                 MatrixTBs[i].Height = CellHeight;
                 MatrixField.Children.Add(MatrixTBs[i]);
             }
-            MatrixField.ColumnDefinitions.Add(new ColumnDefinition());
-            MatrixField.ColumnDefinitions[VarNum].Width = new GridLength(CellWidth);
             for (int i = 0; i < CondNum; i++)
             {
                 IndepConstTBs[i] = new TextBox();
@@ -141,8 +140,8 @@ namespace Simplex
         {
             FunctionGrid.Children.Clear();
             FunctionGrid.ColumnDefinitions.Clear();
-            FunctionTBs = new TextBox[VarNum];
-            for(int i = 0; i < VarNum; i++)
+            FunctionTBs = new TextBox[VarNum + 1];
+            for(int i = 0; i < VarNum + 1; i++)
             {
                 FunctionGrid.ColumnDefinitions.Add(new ColumnDefinition());
                 FunctionGrid.ColumnDefinitions[i].Width = new GridLength(CellWidth);
@@ -162,12 +161,17 @@ namespace Simplex
             {
                 for(int j = 0; j < VarNum; j++)
                 {
-                    matrixTask[i, j] = new Fraction(MatrixTBs[i * CondNum + j].Text);
+                    matrixTask[i, j] = new Fraction(MatrixTBs[i * VarNum + j].Text);
                 }
-                matrixTask[i] = new Fraction(IndepConstTBs[i].Text);
-                matrixTask.SetFuncCoef(new Fraction(FunctionTBs[i].Text), i);
+                matrixTask[i, VarNum] = new Fraction(IndepConstTBs[i].Text);
             }
+            for(int i = 0; i < VarNum + 1; i++)
+                matrixTask.SetFuncCoef(new Fraction(FunctionTBs[i].Text), i);
             MainWindow.CurMatrixTask = matrixTask;
+            BinaryFormatter binFormat = new BinaryFormatter();
+            Stream fStream = new FileStream("user.dat",
+                FileMode.Create, FileAccess.Write, FileShare.None);
+            binFormat.Serialize(fStream, matrixTask);
             this.Close();
         }
     }

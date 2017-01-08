@@ -7,10 +7,10 @@ using Mehroz;
 
 namespace Simplex
 {
+    [Serializable]
     public class MatrixTask
     {
         Fraction[,] Matrix;
-        Fraction[] IndepConst;
         Fraction[] Func;
         int vars;
         int conds;
@@ -35,8 +35,8 @@ namespace Simplex
         {
             this.vars = vars;
             this.conds = conds;
-            Matrix = new Fraction[conds, vars];
-            IndepConst = new Fraction[conds];
+            Func = new Fraction[vars + 1];
+            Matrix = new Fraction[conds, vars + 1];
         }
 
         public Fraction this[int i, int j]
@@ -50,22 +50,28 @@ namespace Simplex
                 Matrix[i, j] = value;
             }
         }
+        
+        public Fraction this[int i]
+        {
+            get
+            {
+                return Func[i];
+            }
+        }
 
         public void SetFuncCoef(Fraction fr, int i)
         {
             Func[i] = fr;
         }
 
-        public Fraction this[int i]
+        public Fraction GetFuncCoef(int i)
         {
-            get
-            {
-                return IndepConst[i];
-            }
-            set
-            {
-                IndepConst[i] = value;
-            }
+            return Func[i];
+        }
+
+        public Fraction[, ] GetMatrix()
+        {
+            return Matrix;
         }
     }
 }
