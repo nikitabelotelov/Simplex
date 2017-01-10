@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="442" Width="634">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="376*"/>
+        </Grid.RowDefinitions>
         <ToolBar x:Name="toolBar" HorizontalAlignment="Left" VerticalAlignment="Top" Height="35" Width="626" RenderTransformOrigin="0.5,0.5">
             <Button x:Name="button" Height="25" VerticalAlignment="Top" Width="70" Margin="0,2,0,0">
                 <Menu x:Name="fileMenu" Height="123" Width="100" RenderTransformOrigin="0.47,0.528">
@@ -17,14 +21,18 @@
                 </Menu>
             </Button>
         </ToolBar>
-        <Grid x:Name="SideVarGrid" HorizontalAlignment="Left" Margin="105,80,0,0" VerticalAlignment="Top"/>
-        <Grid x:Name="TopVarGrid" HorizontalAlignment="Left" Margin="150,45,0,0" VerticalAlignment="Top"/>
-        <Grid x:Name="CoefGrid" HorizontalAlignment="Left" Margin="150,80,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="StartSimplexButton" Content="Start" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="75" Click="StartSimplexButton_Click"/>
-        <Grid x:Name="BasisGrid" HorizontalAlignment="Left" Margin="105,50,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="button1" Content="Next step" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False"/>
-        <Button x:Name="button2" Content="Prev step" HorizontalAlignment="Left" Margin="10,110,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False"/>
-        <Button x:Name="CreateBasisButton" Content="Basis" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top" Width="75" Click="CreateBasisButton_Click"/>
-        <Button x:Name="ClearButton" Content="Clear" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="75" Click="ClearButton_Click"/>
+        <Grid x:Name="SideVarGrid" HorizontalAlignment="Left" Margin="105,45,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Grid x:Name="TopVarGrid" HorizontalAlignment="Left" Margin="150,10,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Grid x:Name="CoefGrid" HorizontalAlignment="Left" Margin="150,45,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Button x:Name="StartSimplexButton" Content="Start" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Width="75" Click="StartSimplexButton_Click" Grid.Row="1"/>
+        <Grid x:Name="BasisGrid" HorizontalAlignment="Left" Margin="105,15,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Button x:Name="NextStepButton" Content="Next step" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Grid.Row="1" Click="button1_Click"/>
+        <Button x:Name="PrevStepButton" Content="Prev step" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Width="75" IsEnabled="False" Grid.Row="1" Click="PrevStepButton_Click"/>
+        <Button x:Name="CreateBasisButton" Content="Basis" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="75" Click="CreateBasisButton_Click" Grid.Row="1"/>
+        <Button x:Name="ClearButton" Content="Clear" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Width="75" Click="ClearButton_Click" Grid.Row="1"/>
+        <CheckBox x:Name="BasisCheckbox" Content="No basis" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <CheckBox x:Name="StepByStepCB" Content="Step by step" HorizontalAlignment="Left" Margin="10,170,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Label x:Name="fileNameLabel" Content="" HorizontalAlignment="Left" Margin="10,190,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <Label x:Name="SolutionLabel" Content="" HorizontalAlignment="Left" Margin="10,221,0,0" Grid.Row="1" VerticalAlignment="Top"/>
     </Grid>
 </Window>

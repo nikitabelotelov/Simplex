@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using Mehroz;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using Microsoft.Win32;
 
 namespace Simplex
 {
@@ -70,6 +71,7 @@ namespace Simplex
             }
             
         }
+
         private void GenMatrixField()
         {
             MatrixField.RowDefinitions.Clear();
@@ -100,6 +102,8 @@ namespace Simplex
                 MatrixTBs[i].Width = CellWidth;
                 MatrixTBs[i].HorizontalAlignment = HorizontalAlignment.Left;
                 MatrixTBs[i].Height = CellHeight;
+                MatrixTBs[i].GotFocus += TaskCreationWindow_GotFocus;
+                MatrixTBs[i].LostFocus += TaskCreationWindow_LostFocus;
                 MatrixField.Children.Add(MatrixTBs[i]);
             }
             for (int i = 0; i < CondNum; i++)
@@ -109,10 +113,17 @@ namespace Simplex
                 IndepConstTBs[i].Height = CellHeight;
                 IndepConstTBs[i].Text = 0.ToString();
                 IndepConstTBs[i].HorizontalAlignment = HorizontalAlignment.Left;
+                IndepConstTBs[i].GotFocus += TaskCreationWindow_GotFocus;
+                IndepConstTBs[i].LostFocus += TaskCreationWindow_LostFocus;
                 Grid.SetColumn(IndepConstTBs[i], VarNum);
                 Grid.SetRow(IndepConstTBs[i], i);
                 MatrixField.Children.Add(IndepConstTBs[i]);
             }
+        }
+
+        private void TaskCreationWindow_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).Text = "";
         }
 
         private void GenVarGrid()
@@ -150,9 +161,17 @@ namespace Simplex
                 FunctionTBs[i].Height = CellHeight;
                 FunctionTBs[i].HorizontalAlignment = HorizontalAlignment.Left;
                 FunctionTBs[i].Text = 0.ToString();
+                FunctionTBs[i].GotFocus += TaskCreationWindow_GotFocus;
+                FunctionTBs[i].LostFocus += TaskCreationWindow_LostFocus;
                 Grid.SetColumn(FunctionTBs[i], i);
                 FunctionGrid.Children.Add(FunctionTBs[i]);
             }
+        }
+
+        private void TaskCreationWindow_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if ((sender as TextBox).Text == "")
+                (sender as TextBox).Text = 0.ToString();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -169,9 +188,25 @@ namespace Simplex
                 matrixTask.SetFuncCoef(new Fraction(FunctionTBs[i].Text), i);
             MainWindow.CurMatrixTask = matrixTask;
             BinaryFormatter binFormat = new BinaryFormatter();
-            Stream fStream = new FileStream("user.dat",
+
+            string fileName = "";
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Saved tasks(*.smx)|*.smx";
+            dialog.CheckFileExists = false;
+            
+            if (dialog.ShowDialog() == true)
+            {
+                fileName = dialog.FileName;
+            }
+            if (fileName == "")
+            {
+                MessageBox.Show("File not selected");
+                return;
+            }
+            Stream fStream = new FileStream(fileName,
                 FileMode.Create, FileAccess.Write, FileShare.None);
             binFormat.Serialize(fStream, matrixTask);
+            MainWindow.curFileName = dialog.SafeFileName;
             this.Close();
         }
     }

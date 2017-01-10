@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,11 @@ namespace Simplex
     {
         static public MatrixTask CurMatrixTask;
         static public SimplexTable CurSimplexTable;
+        static public List<SimplexTable> AllSimplexStates;
+        static public int pos;
+        static public SimplexState state;
+        static public string curFileName = "";
+
         int CellWidth = 50;
         int CellHeight = 30;
         CheckBox[] cbs = null;
@@ -34,14 +40,13 @@ namespace Simplex
         {
             InitializeComponent();
             CurMatrixTask = null;
+            AllSimplexStates = new List<SimplexTable>();
         }
 
         public void GenSimplexTableView()
         {
-            if(CurMatrixTask != null)
+            if (CurMatrixTask != null && CurSimplexTable != null)
             {
-                CurSimplexTable = new SimplexTable(CurMatrixTask, basis);
-
                 genSideVarGrid();
                 genTopVarGrid();
                 genSimplexMatrix();
@@ -138,7 +143,7 @@ namespace Simplex
             {
                 TextBox tb = new TextBox();
                 tb.Focusable = false;
-                Grid.SetRow(tb, CurSimplexTable.Vars - CurSimplexTable.Basis.Length + 1);
+                Grid.SetRow(tb, CurSimplexTable.Basis.Length);
                 Grid.SetColumn(tb, i);
                 tb.Width = CellWidth;
                 tb.Height = CellHeight;
@@ -189,7 +194,7 @@ namespace Simplex
             int c = 0;
             if (cbs == null)
             {
-                MessageBox.Show("Please, set basis");
+                MessageBox.Show("Please, set a basis");
                 return false;
             }
             for (int i = 0; i < cbs.Length; i++)
@@ -206,32 +211,75 @@ namespace Simplex
         }
 
         private void StartSimplexButton_Click(object sender, RoutedEventArgs e)
-        {
+        { 
             if (CurMatrixTask == null)
             {
-                MessageBox.Show("Please, set task");
+                MessageBox.Show("Please, set a task");
                 return;
             }
             basis = new int[CurMatrixTask.Conds];
-            if(!setBasis())
+            if (!BasisCheckbox.IsChecked.Equals(true))
             {
-                return;
+                if (!setBasis())
+                {
+                    return;
+                }
             }
+            NextStepButton.IsEnabled = true;
+            PrevStepButton.IsEnabled = true;
+            fileNameLabel.Content = curFileName;
             BasisGrid.Children.Clear();
+            if (CurMatrixTask != null)
+            {
+                if (BasisCheckbox.IsChecked.Equals(true))
+                    CurSimplexTable = new SimplexTable(CurMatrixTask);
+                else
+                    CurSimplexTable = new SimplexTable(CurMatrixTask, basis);
+                AllSimplexStates.Add(CurSimplexTable.Copy());
+                pos = 0;
+                state = SimplexState.NotFinished;
+                if(StepByStepCB.IsChecked.Equals(false))
+                {
+                    while(state == SimplexState.NotFinished)
+                    {
+                        doNextStep();
+                    }
+                }
+            }
             GenSimplexTableView();
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             BinaryFormatter binFormat = new BinaryFormatter();
-            Stream fStream = new FileStream("user.dat", FileMode.Open);
+            string fileName = "";
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Saved tasks(*.smx)|*.smx";
+            if(dialog.ShowDialog() == true)
+            {
+                fileName = dialog.FileName;
+            }
+            if(fileName == "")
+            {
+                MessageBox.Show("File not selected");
+                return;
+            }
+            Stream fStream = new FileStream(fileName, FileMode.Open);
             CurMatrixTask = binFormat.Deserialize(fStream) as MatrixTask;
+            curFileName = dialog.SafeFileName;
+            fileNameLabel.Content = dialog.SafeFileName;
         }
 
         private void CreateBasisButton_Click(object sender, RoutedEventArgs e)
         {
             if (CurMatrixTask != null)
+            {
+                SideVarGrid.Children.Clear();
+                TopVarGrid.Children.Clear();
+                CoefGrid.Children.Clear();
+                BasisGrid.Children.Clear();
                 genBasisGrid();
+            }
             else
             {
                 MessageBox.Show("Please, set the task");
@@ -246,6 +294,94 @@ namespace Simplex
             TopVarGrid.Children.Clear();
             CoefGrid.Children.Clear();
             BasisGrid.Children.Clear();
+            NextStepButton.IsEnabled = false;
+            PrevStepButton.IsEnabled = false;
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            if (AllSimplexStates != null)
+            {
+                if (CurSimplexTable != null)
+                {
+                    if (pos + 1 != AllSimplexStates.Count)
+                    {
+                        CurSimplexTable = AllSimplexStates[pos + 1];
+                        pos++;
+                        GenSimplexTableView();
+                        return;
+                    }
+                }
+            }
+            doNextStep();
+        }
+
+        private void doNextStep()
+        {
+            if (CurSimplexTable == null)
+                return;
+            CurSimplexTable = CurSimplexTable.NextSimplexState(out state);
+            if (state == SimplexState.Solved)
+            {
+                CurSimplexTable = AllSimplexStates.Last();
+                MessageBox.Show("Simplex finished");
+                SolutionLabel.Content = "(";
+                for (int i = 0; i < CurSimplexTable.Vars; i++)
+                {
+                    if (CurSimplexTable.Basis.Contains(i))
+                    {
+                        if (i == CurSimplexTable.Basis.Length - 1)
+                        {
+                            SolutionLabel.Content += CurSimplexTable[CurSimplexTable.Basis.ToList().IndexOf(i), CurSimplexTable.NonBasisVars];
+                        }
+                        else
+                        {
+                            SolutionLabel.Content += CurSimplexTable[CurSimplexTable.Basis.ToList().IndexOf(i), CurSimplexTable.NonBasisVars].ToString() + ", ";
+                        }
+                    }
+                    else
+                    {
+                        if (i == CurSimplexTable.Basis.Length - 1)
+                        {
+                            SolutionLabel.Content += 0.ToString();
+                        }
+                        else
+                        {
+                            SolutionLabel.Content += 0.ToString() + ", ";
+                        }
+                    }
+                }
+                SolutionLabel.Content += ")" + (-CurSimplexTable[CurSimplexTable.NonBasisVars + 1]).ToString();
+                return;
+            }
+            else if (state == SimplexState.NotFinished)
+            {
+                AllSimplexStates.Add(CurSimplexTable.Copy());
+                pos++;
+                GenSimplexTableView();
+            }
+            else if (state == SimplexState.NoSolutionExists)
+            {
+                MessageBox.Show("No solution exists");
+            }
+        }
+
+        private void PrevStepButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (AllSimplexStates != null)
+            {
+                if(pos == 0)
+                {
+                    MessageBox.Show("No previous steps");
+                    return;
+                }
+                else
+                {
+                    CurSimplexTable = AllSimplexStates.ElementAt(pos - 1);
+                    pos--;
+                    GenSimplexTableView();
+                }
+            }
         }
     }
 }
