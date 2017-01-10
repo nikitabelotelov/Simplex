@@ -132,14 +132,14 @@ namespace Simplex
 
             for (int i = 0; i < mTask.Conds; i++)
                 synthBasis[i] = i + mTask.Vars;
-
+            int col = 0;
             SynthBasisState state;
             while (!SynthBasisCompl(bottRow, nonBasisVars, out state))
             {
-                int col = -1;
-                for (int i = 0; i < mTask.Vars; i++)
+                
+                for (int i = col; i < mTask.Vars; i++)
                 {
-                    if (bottRow[i] < 0 && nonBasisVars[i] == i)//Kostyl'
+                    if (bottRow[i] < 0)//Kostyl'
                     {
                         col = i;
                         break;
@@ -171,6 +171,7 @@ namespace Simplex
                             refElIndexI = i;
                             refElIndexJ = col;
                             refEl = SyntheticBasisMatrix[i, col];
+                            quot = (SyntheticBasisMatrix[i, mTask.Vars] / SyntheticBasisMatrix[i, col]);
                         }
                     }
                 }
@@ -566,7 +567,7 @@ namespace Simplex
 
                 for (int i = 0; i < basis.Length; i++)//Находим опорный элемент
                 {
-                    if (table[i][col] >= 0)
+                    if (table[i][col] > 0)
                     {
                         if (!refElSet)
                         {

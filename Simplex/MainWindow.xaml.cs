@@ -325,7 +325,7 @@ namespace Simplex
             {
                 CurSimplexTable = AllSimplexStates.Last();
                 MessageBox.Show("Simplex finished");
-                SolutionLabel.Content = "(";
+                /*SolutionLabel.Content = "(";
                 for (int i = 0; i < CurSimplexTable.Vars; i++)
                 {
                     if (CurSimplexTable.Basis.Contains(i))
@@ -351,7 +351,7 @@ namespace Simplex
                         }
                     }
                 }
-                SolutionLabel.Content += ")" + (-CurSimplexTable[CurSimplexTable.NonBasisVars + 1]).ToString();
+                SolutionLabel.Content += ")" + " " + (-CurSimplexTable[CurSimplexTable.NonBasisVars + 1]).ToString();*/
                 return;
             }
             else if (state == SimplexState.NotFinished)
