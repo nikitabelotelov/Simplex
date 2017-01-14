@@ -135,7 +135,7 @@ namespace Simplex
                 VarGrid.ColumnDefinitions.Add(new ColumnDefinition());
                 VarGrid.ColumnDefinitions[i].Width = new GridLength(CellWidth);
                 Label l = new Label();
-                l.Content = "x" + i.ToString();
+                l.Content = "x" + (i + 1).ToString();
                 VarGrid.Children.Add(l);
                 Grid.SetColumn(l, i);
             }
