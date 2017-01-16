@@ -1,5 +1,16 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using Mehroz;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -21,10 +32,6 @@ namespace Simplex
         TextBox[] MatrixTBs;
         TextBox[] IndepConstTBs;
         TextBox[] FunctionTBs;
-
-        public delegate void TaskSetMethod(MatrixTask m, string FileName);
-
-        public event TaskSetMethod OnTaskEntered;
 
         public TaskCreationWindow()
         {
@@ -179,6 +186,7 @@ namespace Simplex
             }
             for(int i = 0; i < VarNum + 1; i++)
                 matrixTask.SetFuncCoef(new Fraction(FunctionTBs[i].Text), i);
+            MainWindow.CurMatrixTask = matrixTask;
             BinaryFormatter binFormat = new BinaryFormatter();
 
             string fileName = "";
@@ -198,7 +206,7 @@ namespace Simplex
             Stream fStream = new FileStream(fileName,
                 FileMode.Create, FileAccess.Write, FileShare.None);
             binFormat.Serialize(fStream, matrixTask);
-            OnTaskEntered(matrixTask, dialog.SafeFileName);
+            MainWindow.curFileName = dialog.SafeFileName;
             this.Close();
         }
     }

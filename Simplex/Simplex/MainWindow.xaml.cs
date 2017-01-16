@@ -23,12 +23,12 @@ namespace Simplex
     /// </summary>
     public partial class MainWindow : Window
     {
+        static public MatrixTask CurMatrixTask;
         static public SimplexTable CurSimplexTable;
         static public List<SimplexTable> AllSimplexStates;
         static public int pos;
         static public SimplexState state;
-        public string curFileName = "";
-        public MatrixTask CurMatrixTask;
+        static public string curFileName = "";
 
         int CellWidth = 50;
         int CellHeight = 30;
@@ -186,14 +186,7 @@ namespace Simplex
         private void createTaskClicked(object sender, RoutedEventArgs e)
         {
             TaskCreationWindow taskCreationWindow = new TaskCreationWindow();
-            taskCreationWindow.OnTaskEntered += TaskCreationWindow_OnTaskEntered;
             taskCreationWindow.Show();
-        }
-
-        private void TaskCreationWindow_OnTaskEntered(MatrixTask m, string FileName)
-        {
-            CurMatrixTask = m;
-            curFileName = FileName;
         }
 
         private bool setBasis()

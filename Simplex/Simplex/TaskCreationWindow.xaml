@@ -1,0 +1,24 @@
+﻿<Window x:Class="Simplex.TaskCreationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Simplex"
+        mc:Ignorable="d"
+        Title="taskCreationWindow" Height="628.985" Width="558.372">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="varNumTB" HorizontalAlignment="Left" Height="20" Margin="165,14,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70" />
+        <Label x:Name="label" Content="Количество переменных:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="28" Width="155"/>
+        <TextBox x:Name="condNumTB" HorizontalAlignment="Left" Height="20" Margin="165,47,0,0" TextWrapping="Wrap" Text="3" VerticalAlignment="Top" Width="70"/>
+        <Label x:Name="label_Copy" Content="Количество условий:" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Height="28" Width="155"/>
+        <Button x:Name="SetButton" Content="Set" HorizontalAlignment="Left" Margin="255,46,0,0" VerticalAlignment="Top" Width="75" Click="SetButton_Click" Height="20"/>
+        <Grid x:Name="VarGrid" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top"/>
+        <Grid x:Name="FunctionGrid" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top"/>
+        <Grid x:Name="MatrixField" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top" />
+        <Button x:Name="SaveButton" Content="Save task" HorizontalAlignment="Left" Margin="255,14,0,0" VerticalAlignment="Top" Width="75" Click="SaveButton_Click"/>
+    </Grid>
+</Window>
