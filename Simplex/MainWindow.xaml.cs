@@ -183,7 +183,33 @@ namespace Simplex
             }
         }
 
-        private void createTaskClicked(object sender, RoutedEventArgs e)
+        private void EditTaskClicked(object sender, RoutedEventArgs e)
+        {
+            BinaryFormatter binFormat = new BinaryFormatter();
+            string fileName = "";
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Saved tasks(*.smx)|*.smx";
+            if (dialog.ShowDialog() == true)
+            {
+                fileName = dialog.FileName;
+            }
+            if (fileName == "")
+            {
+                MessageBox.Show("File not selected");
+                return;
+            }
+            Stream fStream = new FileStream(fileName, FileMode.Open);
+            CurMatrixTask = binFormat.Deserialize(fStream) as MatrixTask;
+            fStream.Close();
+            curFileName = dialog.SafeFileName;
+            fileNameLabel.Content = dialog.SafeFileName;
+            TaskCreationWindow taskCreationWindow = new TaskCreationWindow(CurMatrixTask);
+            taskCreationWindow.OnTaskEntered += TaskCreationWindow_OnTaskEntered;
+            taskCreationWindow.Show();
+
+        }
+
+        private void CreateTaskClicked(object sender, RoutedEventArgs e)
         {
             TaskCreationWindow taskCreationWindow = new TaskCreationWindow();
             taskCreationWindow.OnTaskEntered += TaskCreationWindow_OnTaskEntered;
@@ -256,7 +282,7 @@ namespace Simplex
             GenSimplexTableView();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void OpenTaskClicked(object sender, RoutedEventArgs e)
         {
             BinaryFormatter binFormat = new BinaryFormatter();
             string fileName = "";
@@ -273,6 +299,7 @@ namespace Simplex
             }
             Stream fStream = new FileStream(fileName, FileMode.Open);
             CurMatrixTask = binFormat.Deserialize(fStream) as MatrixTask;
+            fStream.Close();
             curFileName = dialog.SafeFileName;
             fileNameLabel.Content = dialog.SafeFileName;
         }

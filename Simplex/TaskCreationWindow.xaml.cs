@@ -4,6 +4,7 @@ using Mehroz;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Microsoft.Win32;
+using System.Xml.Serialization;
 
 namespace Simplex
 {
@@ -29,6 +30,19 @@ namespace Simplex
         public TaskCreationWindow()
         {
             InitializeComponent();
+        }
+
+        public TaskCreationWindow(MatrixTask mTask)
+        {
+            InitializeComponent();
+            matrixTask = mTask;
+            VarNum = mTask.Vars;
+            CondNum = mTask.Conds;
+            GenMatrixField();
+            GenMatrixFieldTBs();
+            GenVarGrid();
+            GenFuncGrid();
+            FillTbs();
         }
 
         private bool SetMatrixInfo()
@@ -62,7 +76,22 @@ namespace Simplex
                 GenVarGrid();
                 GenFuncGrid();
             }
-            
+        }
+
+        private void FillTbs()
+        {
+            for (int i = 0; i < CondNum; i++)
+            {
+                for (int j = 0; j < VarNum; j++)
+                {
+                    MatrixTBs[i * VarNum + j].Text = matrixTask[i, j].ToString();
+                }
+                IndepConstTBs[i].Text = matrixTask[i, VarNum].ToString();
+            }
+            for (int i = 0; i < VarNum + 1; i++)
+                FunctionTBs[i].Text = matrixTask[i].ToString();
+            condNumTB.Text = CondNum.ToString();
+            varNumTB.Text = VarNum.ToString();
         }
 
         private void GenMatrixField()
@@ -86,21 +115,22 @@ namespace Simplex
             MatrixField.Children.Clear();
             MatrixTBs = new TextBox[VarNum * CondNum];
             IndepConstTBs = new TextBox[CondNum];
-            for (int i = 0; i < MatrixTBs.Length; i++)
-            {
-                MatrixTBs[i] = new TextBox();
-                Grid.SetColumn(MatrixTBs[i], i % VarNum);
-                Grid.SetRow(MatrixTBs[i], i / VarNum);
-                MatrixTBs[i].Text = 0.ToString();
-                MatrixTBs[i].Width = CellWidth;
-                MatrixTBs[i].HorizontalAlignment = HorizontalAlignment.Left;
-                MatrixTBs[i].Height = CellHeight;
-                MatrixTBs[i].GotFocus += TaskCreationWindow_GotFocus;
-                MatrixTBs[i].LostFocus += TaskCreationWindow_LostFocus;
-                MatrixField.Children.Add(MatrixTBs[i]);
-            }
             for (int i = 0; i < CondNum; i++)
             {
+                for (int j = 0; j < VarNum; j++)
+                {
+                    MatrixTBs[j + i * VarNum] = new TextBox();
+                    Grid.SetColumn(MatrixTBs[j + i * VarNum], j % VarNum);
+                    Grid.SetRow(MatrixTBs[j + i * VarNum], i);
+                    MatrixTBs[j + i * VarNum].Text = 0.ToString();
+                    MatrixTBs[j + i * VarNum].Width = CellWidth;
+                    MatrixTBs[j + i * VarNum].HorizontalAlignment = HorizontalAlignment.Left;
+                    MatrixTBs[j + i * VarNum].Height = CellHeight;
+                    MatrixTBs[j + i * VarNum].GotFocus += TaskCreationWindow_GotFocus;
+                    MatrixTBs[j + i * VarNum].LostFocus += TaskCreationWindow_LostFocus;
+                    MatrixField.Children.Add(MatrixTBs[j + i * VarNum]);
+                }
+
                 IndepConstTBs[i] = new TextBox();
                 IndepConstTBs[i].Width = CellWidth;
                 IndepConstTBs[i].Height = CellHeight;
@@ -123,7 +153,7 @@ namespace Simplex
         {
             VarGrid.ColumnDefinitions.Clear();
             VarGrid.Children.Clear();
-            for(int i = 0; i < VarNum; i++)
+            for (int i = 0; i < VarNum; i++)
             {
                 VarGrid.ColumnDefinitions.Add(new ColumnDefinition());
                 VarGrid.ColumnDefinitions[i].Width = new GridLength(CellWidth);
@@ -145,7 +175,7 @@ namespace Simplex
             FunctionGrid.Children.Clear();
             FunctionGrid.ColumnDefinitions.Clear();
             FunctionTBs = new TextBox[VarNum + 1];
-            for(int i = 0; i < VarNum + 1; i++)
+            for (int i = 0; i < VarNum + 1; i++)
             {
                 FunctionGrid.ColumnDefinitions.Add(new ColumnDefinition());
                 FunctionGrid.ColumnDefinitions[i].Width = new GridLength(CellWidth);
@@ -169,23 +199,22 @@ namespace Simplex
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            for(int i = 0; i < CondNum; i++)
+            for (int i = 0; i < CondNum; i++)
             {
-                for(int j = 0; j < VarNum; j++)
+                for (int j = 0; j < VarNum; j++)
                 {
                     matrixTask[i, j] = new Fraction(MatrixTBs[i * VarNum + j].Text);
                 }
                 matrixTask[i, VarNum] = new Fraction(IndepConstTBs[i].Text);
             }
-            for(int i = 0; i < VarNum + 1; i++)
-                matrixTask.SetFuncCoef(new Fraction(FunctionTBs[i].Text), i);
-            BinaryFormatter binFormat = new BinaryFormatter();
+            for (int i = 0; i < VarNum + 1; i++)
+                matrixTask[i] = new Fraction(FunctionTBs[i].Text);
 
             string fileName = "";
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filter = "Saved tasks(*.smx)|*.smx";
             dialog.CheckFileExists = false;
-            
+
             if (dialog.ShowDialog() == true)
             {
                 fileName = dialog.FileName;
@@ -195,12 +224,16 @@ namespace Simplex
                 MessageBox.Show("File not selected");
                 return;
             }
+
+            //XmlSerializer serializer = new XmlSerializer(typeof(MatrixTask));
+            BinaryFormatter binFormat = new BinaryFormatter();
             Stream fStream = new FileStream(fileName,
                 FileMode.Create, FileAccess.Write, FileShare.None);
             binFormat.Serialize(fStream, matrixTask);
+            fStream.Close();
+
             OnTaskEntered(matrixTask, dialog.SafeFileName);
             this.Close();
         }
     }
-
 }

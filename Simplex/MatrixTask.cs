@@ -10,10 +10,10 @@ namespace Simplex
     [Serializable]
     public class MatrixTask
     {
-        Fraction[,] Matrix;
-        Fraction[] Func;
-        int vars;
-        int conds;
+        public Fraction[,] Matrix;
+        public Fraction[] Func;
+        public int vars;
+        public int conds;
 
         public int Conds
         {
@@ -57,11 +57,10 @@ namespace Simplex
             {
                 return Func[i];
             }
-        }
-
-        public void SetFuncCoef(Fraction fr, int i)
-        {
-            Func[i] = fr;
+            set
+            {
+                Func[i] = value;
+            }
         }
 
         public Fraction GetFuncCoef(int i)

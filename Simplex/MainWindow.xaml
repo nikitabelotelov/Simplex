@@ -15,8 +15,9 @@
             <Button x:Name="button" Height="25" VerticalAlignment="Top" Width="70" Margin="0,2,0,0">
                 <Menu x:Name="fileMenu" Height="123" Width="100" RenderTransformOrigin="0.47,0.528">
                     <MenuItem Header="File" Height="20" Width="67">
-                        <MenuItem Header="Open task" Click="MenuItem_Click" />
-                        <MenuItem Header="Create task" Click="createTaskClicked" />
+                        <MenuItem Header="Open task" Click="OpenTaskClicked" />
+                        <MenuItem Header="Create task" Click="CreateTaskClicked" />
+                        <MenuItem Header="Edit task" Click="EditTaskClicked" />
                     </MenuItem>
                 </Menu>
             </Button>

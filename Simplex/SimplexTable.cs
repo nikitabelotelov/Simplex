@@ -33,6 +33,8 @@ namespace Simplex
         Fraction[] func;
         List<List<Fraction>> table;
         Fraction[,] SyntheticBasisMatrix;
+        public bool isSyntheticBasis = false;
+
 
         public SimplexTable Copy()
         {
@@ -96,6 +98,7 @@ namespace Simplex
 
         public SimplexTable(MatrixTask m)
         {
+            isSyntheticBasis = true;
             this.mTask = m;
             Fraction[] bottRow = new Fraction[mTask.Vars + 1];
 
@@ -134,6 +137,7 @@ namespace Simplex
                 synthBasis[i] = i + mTask.Vars;
             int col = 0;
             SynthBasisState state;
+
             while (!SynthBasisCompl(bottRow, nonBasisVars, out state))
             {
                 
@@ -449,37 +453,6 @@ namespace Simplex
         }
 
         private void AddCoefsToTable(Fraction[,] coefMatrix)
-        {
-
-            for (int i = 0; i < Vars + 1; i++)//Записываем коэффициенты в симплекс таблицу
-            {
-                if (!basis.ToList().Contains(i))
-                {
-                    for (int j = 0; j < BasisVars; j++)
-                    {
-                        table[j].Add(coefMatrix[j, i]);
-                    }
-                }
-            }
-
-            for (int i = 0; i < NonBasisVars + 1; i++)//Вычисляем коэффициенты в функции
-            {
-                for (int j = 0; j < basis.Length; j++)
-                {
-                    func[i] += -table[j][i] * mTask[basis[j]];
-                }
-            }
-
-            for (int i = 0, c = 0; i < Vars + 1; i++)
-            {
-                if (!basis.Contains(i))
-                {
-                    func[c++] += mTask[i];
-                }
-            }
-        }
-
-        private void AddCoefsToTable(Fraction[,] coefMatrix, Fraction[] bR)
         {
 
             for (int i = 0; i < Vars + 1; i++)//Записываем коэффициенты в симплекс таблицу
